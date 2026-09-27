@@ -61,7 +61,6 @@ jobs:
           start: npm start
           wait-on: http://localhost:4173/healthz
           wait-on-timeout: 60
-          browser: ${{ matrix.browser }}
           command: npx cypress run --e2e --browser ${{ matrix.browser }} --expose grepTags=-@quarantine
 
       - name: Upload failure screenshots
