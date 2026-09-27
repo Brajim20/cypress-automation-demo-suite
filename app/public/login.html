@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sign in · Todos</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <script type="module" src="/login.js"></script>
+  </head>
+  <body>
+    <main class="login">
+      <h1>Sign in</h1>
+
+      <p class="notice" role="status" data-cy="session-expired" hidden>
+        Your session expired. Sign in again to continue.
+      </p>
+
+      <form data-cy="login-form" novalidate>
+        <label for="email">Email</label>
+        <input id="email" type="email" autocomplete="username" data-cy="login-email" required />
+
+        <label for="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          autocomplete="current-password"
+          data-cy="login-password"
+          required
+        />
+
+        <p class="field-error" role="alert" data-cy="login-error" hidden></p>
+
+        <button type="submit" data-cy="login-submit">Sign in</button>
+      </form>
+    </main>
+  </body>
+</html>

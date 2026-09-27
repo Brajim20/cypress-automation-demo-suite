@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Todos</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <script type="module" src="/app.js"></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <span>Signed in as <strong data-cy="current-user"></strong></span>
+      <button type="button" class="link-button" data-cy="logout">Sign out</button>
+    </header>
+
+    <main class="todoapp">
+      <h1>todos</h1>
+
+      <div class="banner" role="alert" data-cy="error-banner" hidden>
+        <span data-cy="error-message"></span>
+        <button type="button" data-cy="retry" hidden>Retry</button>
+      </div>
+
+      <form class="new-todo-form" data-cy="new-todo-form" novalidate>
+        <label for="new-todo" class="visually-hidden">New todo</label>
+        <input
+          id="new-todo"
+          class="new-todo"
+          data-cy="new-todo"
+          placeholder="What needs to be done?"
+          autocomplete="off"
+          aria-describedby="new-todo-error"
+          autofocus
+        />
+        <p id="new-todo-error" class="field-error" data-cy="new-todo-error" hidden></p>
+      </form>
+
+      <p class="status" data-cy="loading" hidden>Loading your todos…</p>
+      <p class="status" data-cy="empty-state" hidden>
+        Nothing to do yet. Add your first todo above.
+      </p>
+
+      <section class="main" data-cy="main" hidden>
+        <input id="toggle-all" class="toggle-all" type="checkbox" data-cy="toggle-all" />
+        <label for="toggle-all">Mark all as complete</label>
+        <ul class="todo-list" data-cy="todo-list"></ul>
+      </section>
+
+      <footer class="footer" data-cy="footer" hidden>
+        <span class="todo-count" data-cy="todo-count"></span>
+        <nav aria-label="Filter todos">
+          <ul class="filters">
+            <li><a href="#/" data-cy="filter-all">All</a></li>
+            <li><a href="#/active" data-cy="filter-active">Active</a></li>
+            <li><a href="#/completed" data-cy="filter-completed">Completed</a></li>
+          </ul>
+        </nav>
+        <button type="button" class="clear-completed" data-cy="clear-completed" hidden>
+          Clear completed
+        </button>
+      </footer>
+    </main>
+  </body>
+</html>

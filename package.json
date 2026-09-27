@@ -1,0 +1,49 @@
+{
+  "name": "cypress-automation-demo-suite",
+  "version": "1.0.0",
+  "description": "Cypress suite with a manual-QA layer: UI, integration (cy.intercept), API, security smoke, accessibility and unit tests against a local app under test, plus test cases, traceability and QA process docs.",
+  "scripts": {
+    "start": "node app/server.js",
+    "cy:open": "cypress open --e2e --browser chrome",
+    "cy:run": "cypress run --e2e",
+    "test": "start-server-and-test start http-get://localhost:4173/healthz cy:run",
+    "test:smoke": "start-server-and-test start http-get://localhost:4173/healthz \"npm run cy:run -- --expose grepTags=@smoke,grepFilterSpecs=true,grepOmitFiltered=true\"",
+    "test:api": "start-server-and-test start http-get://localhost:4173/healthz \"npm run cy:run -- --spec 'cypress/e2e/api/**'\"",
+    "test:ui": "start-server-and-test start http-get://localhost:4173/healthz \"npm run cy:run -- --spec 'cypress/e2e/ui/**,cypress/e2e/integration/**'\"",
+    "test:security": "start-server-and-test start http-get://localhost:4173/healthz \"npm run cy:run -- --spec 'cypress/e2e/security/**'\"",
+    "test:a11y": "start-server-and-test start http-get://localhost:4173/healthz \"npm run cy:run -- --spec 'cypress/e2e/a11y/**'\"",
+    "test:unit": "vitest run",
+    "dev": "start-server-and-test start http-get://localhost:4173/healthz cy:open",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "format:check": "prettier --check .",
+    "format": "prettier --write .",
+    "verify": "npm run typecheck && npm run lint && npm run format:check && npm run test:unit",
+    "test:gate": "start-server-and-test start http-get://localhost:4173/healthz \"npm run cy:run -- --expose grepTags=-@quarantine\""
+  },
+  "author": "Brayan Jimenez",
+  "license": "MIT",
+  "devDependencies": {
+    "@cypress/grep": "^7.0.0",
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^26.6.3",
+    "axe-core": "^4.13.0",
+    "cypress": "^15.21.1",
+    "cypress-axe": "^1.7.0",
+    "eslint": "^10.11.0",
+    "eslint-plugin-cypress": "^7.0.2",
+    "prettier": "^3.9.9",
+    "start-server-and-test": "^3.0.12",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.70.1",
+    "vitest": "^5.0.2"
+  },
+  "private": true,
+  "engines": {
+    "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Brajim20/cypress-automation-demo-suite.git"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "todos": [
+    { "id": 101, "title": "Write test plan", "completed": false },
+    { "id": 102, "title": "Review pull request", "completed": true },
+    { "id": 103, "title": "Update regression suite", "completed": false }
+  ]
+}

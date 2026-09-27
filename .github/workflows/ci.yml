@@ -1,0 +1,73 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  # ---------------------------------------------------------------- fast checks
+  # Everything that doesn't need a browser, so a lint or unit failure is reported in seconds.
+  verify:
+    name: Typecheck, lint, format, unit tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+        env:
+          CYPRESS_INSTALL_BINARY: 0 # not needed for this job
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run format:check
+      - run: npm run test:unit
+
+  # ------------------------------------------------------------- the merge gate
+  # Local, deterministic target only. A red build here means this repo broke something,
+  # never that a third-party site fell over. No retries (see docs/QA_PROCESS.md#flaky-tests),
+  # and tests tagged @quarantine are excluded.
+  cypress:
+    name: Cypress (${{ matrix.browser }})
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [electron, chrome]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Run Cypress against the local app
+        uses: cypress-io/github-action@v6
+        with:
+          start: npm start
+          wait-on: http://localhost:4173/healthz
+          wait-on-timeout: 60
+          browser: ${{ matrix.browser }}
+          command: npx cypress run --e2e --browser ${{ matrix.browser }} --expose grepTags=-@quarantine
+
+      - name: Upload failure screenshots
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots-${{ matrix.browser }}
+          path: cypress/screenshots
+          retention-days: 14
